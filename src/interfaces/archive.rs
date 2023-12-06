@@ -16,6 +16,6 @@ pub struct ArchiveFileInfo {
 
 pub trait ArchiveReader {
     fn info(&mut self) -> Result<ArchiveInfo>;
-    fn enumeratefiles(&mut self) -> Result<Vec<ArchiveFileInfo>>;
-    fn read_by_index(&mut self, index: usize) -> Result<Vec<u8>>;
+    fn enumeratefiles(&mut self, password: &[u8]) -> Result<Vec<ArchiveFileInfo>>;
+    fn read_by_index(&mut self, index: usize, password: &[u8]) -> Result<Vec<u8>>;
 }
