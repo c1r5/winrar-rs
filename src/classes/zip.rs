@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, io::Read};
 use std::path::Path;
 
 use crate::interfaces::archive::{ArchiveFileInfo, ArchiveInfo, ArchiveReader};
@@ -31,10 +31,13 @@ impl ArchiveReader for ArchiveFileZip {
         })
     }
 
-    fn enumeratefiles(&mut self) -> std::io::Result<Vec<ArchiveFileInfo>> {
+    fn enumeratefiles(&mut self, password:&[u8]) -> std::io::Result<Vec<ArchiveFileInfo>> {
         let listing = (0..self.archive.len())
             .map(|i| {
-                let file = self.archive.by_index(i).unwrap();
+                let file = self.archive
+                .by_index_decrypt(i, password)
+                .unwrap().expect("Invalid Password");
+
                 let archive_info = if file.is_file() {
                     let new_path = Path::new(file.name());
 
@@ -64,7 +67,15 @@ impl ArchiveReader for ArchiveFileZip {
         Ok(listing)
     }
 
-    fn read_by_index(&mut self, index: usize) -> std::io::Result<Vec<u8>> {
-        todo!()
+    fn read_by_index(&mut self, index: usize, password:&[u8]) -> std::io::Result<Vec<u8>> {
+        let mut file = self.archive
+        .by_index_decrypt(index, password)
+        .unwrap().expect("Invalid Password");
+
+        let mut buf: Vec<u8> = Vec::new();
+
+        file.read_to_end(&mut buf)?;
+
+        Ok(buf)
     }
 }
