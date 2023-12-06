@@ -1,6 +1,5 @@
 use std::io::Result;
 
-
 #[derive(Debug)]
 pub struct ArchiveInfo {
     pub length: usize,
@@ -17,6 +16,6 @@ pub struct ArchiveFileInfo {
 
 pub trait ArchiveReader {
     fn info(&mut self) -> Result<ArchiveInfo>;
-    fn enumerate_files(&mut self) -> Result<Vec<ArchiveFileInfo>>;
-    fn read_by_index(&mut self, index: usize) -> Result<Vec<u8>>;   
+    fn enumeratefiles(&mut self) -> Result<Vec<ArchiveFileInfo>>;
+    fn read_by_index(&mut self, index: usize) -> Result<Vec<u8>>;
 }

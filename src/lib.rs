@@ -35,7 +35,7 @@ mod test {
     fn okay() -> Result<()> {
         let filename = "example.zip";
         let mut reader = Triage::reader(filename)?;
-        let files = reader.enumerate_files()?;
+        let files = reader.enumeratefiles()?;
 
         for file in files {
             println!("{:?}", file)
