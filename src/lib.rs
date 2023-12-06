@@ -33,13 +33,25 @@ mod test {
     use std::io::Result;
     #[test]
     fn okay() -> Result<()> {
-        let filename = "example.zip";
+        let filename = "teste.zip";
         let mut reader = Triage::reader(filename)?;
-        let files = reader.enumeratefiles()?;
 
-        for file in files {
-            println!("{:?}", file)
-        }
+        let info = reader.info()?;
+
+        let password: Option<&[u8]> = if info.has_password {
+            Some(b"PASSOWRD_HERE")
+        } else {
+            None
+        };
+
+        let resolved_pass: &[u8] = password.unwrap_or(b"nopass");
+
+        let _files = reader.enumeratefiles(resolved_pass)?;
+
+        let buffer = reader.read_by_index(10, resolved_pass)?;
+        let readable = String::from_utf8_lossy(&buffer);
+
+        println!("{}", readable);
 
         Ok(())
     }
