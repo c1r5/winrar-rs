@@ -12,7 +12,11 @@ impl Triage {
         filename: F,
     ) -> Result<impl interfaces::archive::ArchiveReader> {
         let filepath: PathBuf = filename.into();
-        let extension = filepath.extension().unwrap();
+
+        let Some(extension) = filepath.extension() else {
+            return Err(classes::error::ArchiveError::unexpected());
+        };
+
         let file = File::open(&filepath)?;
         match extension.to_str() {
             Some("zip") => Ok(classes::zip::ArchiveFileZip::new(file)),
@@ -26,14 +30,14 @@ impl Triage {
 
 #[cfg(test)]
 mod test {
-
-    use crate::interfaces::archive::ArchiveReader;
-
     use super::*;
+    use crate::interfaces::archive::ArchiveReader;
     use std::io::Result;
+
     #[test]
-    fn okay() -> Result<()> {
+    fn test_zip() -> Result<()> {
         let filename = "teste.zip";
+
         let mut reader = Triage::reader(filename)?;
 
         let info = reader.info()?;
@@ -49,10 +53,16 @@ mod test {
         let _files = reader.enumeratefiles(resolved_pass)?;
 
         let buffer = reader.read_by_index(10, resolved_pass)?;
+
         let readable = String::from_utf8_lossy(&buffer);
 
         println!("{}", readable);
 
         Ok(())
+    }
+
+    #[test]
+    fn test_rar() -> Result<()> {
+        todo!()
     }
 }
