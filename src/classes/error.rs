@@ -8,6 +8,6 @@ impl ArchiveError {
     }
 
     pub fn unexpected() -> io::Error {
-        io::Error::new(io::ErrorKind::UnexpectedEof, "Unexpected Errro")
+        io::Error::new(io::ErrorKind::UnexpectedEof, "Unexpected Err")
     }
 }
