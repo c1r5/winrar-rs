@@ -12,7 +12,8 @@
 * ```ArchiveWrite```: _not implemented yet_
 
 ### To-Do list
-- [x] Get info about ```zip``` file.
+- [x] Zip files support.
+- [x] Get info about file.
 - [x] List files inside of archive.
-- [x] Read file into archive
+- [x] Read file into archive.
 
